@@ -28,7 +28,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const addEmployee = (e: React.FormEvent) => {
     e.preventDefault();
     if (newName.trim()) {
-      onUpdate([...data.employees, { id: generateId(), name: newName.trim(), color: getRandomColor() }]);
+      onUpdate([...data.employees, { id: generateId(), name: newName.trim(), color: getRandomColor(), order: data.employees.length }]);
       setNewName('');
     }
   };
