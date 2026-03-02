@@ -83,6 +83,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
           }
         }
       });
+      if (!response.text) throw new Error('Empty response from AI');
       setAiSuggestion(JSON.parse(response.text));
     } catch (e) {
       setAiSuggestion(FALLBACK_TIPS[0]);
