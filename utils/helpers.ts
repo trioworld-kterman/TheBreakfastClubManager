@@ -55,8 +55,13 @@ export const countFridaysSince = (fromDate: Date): number => {
   const from = new Date(fromDate);
   from.setHours(0, 0, 0, 0);
   if (pastFriday <= from) return 0;
-  const msPerWeek = 7 * 24 * 60 * 60 * 1000;
-  return Math.round((pastFriday.getTime() - from.getTime()) / msPerWeek);
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const utcDays = Math.round(
+    (Date.UTC(pastFriday.getFullYear(), pastFriday.getMonth(), pastFriday.getDate()) -
+     Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) /
+    msPerDay
+  );
+  return Math.round(utcDays / 7);
 };
 
 export const formatDate = (date: Date): string => {
