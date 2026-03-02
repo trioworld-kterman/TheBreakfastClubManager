@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GroupData, Employee, BreadSuggestion } from '../types';
 import { getNextFridays, formatDate, generateId, getRandomColor } from '../utils/helpers';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -39,6 +39,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
       setNewName('');
     }
   };
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedIdx(null);
+    onUpdate(localEmployees);
+  }, [localEmployees, onUpdate]);
 
   const handleDragOver = (e: React.DragEvent, idx: number) => {
     e.preventDefault();
@@ -145,7 +150,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
               </form>
 
               <div className="space-y-3">
-                {data.employees.length === 0 ? (
+                {localEmployees.length === 0 ? (
                   <div className="text-center py-10 border-2 border-dashed border-amber-100 rounded-3xl">
                     <p className="text-amber-900/30 font-black italic text-sm">Add some bakers to start the loop.</p>
                   </div>
@@ -156,7 +161,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                       draggable
                       onDragStart={() => { setLocalEmployees(data.employees); setDraggedIdx(idx); }}
                       onDragOver={e => handleDragOver(e, idx)}
-                      onDragEnd={() => { setDraggedIdx(null); onUpdate(localEmployees); }}
+                      onDragEnd={handleDragEnd}
                       className={`group flex items-center justify-between p-5 bg-white rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing ${draggedIdx === idx ? 'opacity-20 border-amber-900 border-dashed scale-95' : 'border-amber-50 hover:border-amber-950 shadow-sm hover:shadow-md'
                         }`}
                     >
