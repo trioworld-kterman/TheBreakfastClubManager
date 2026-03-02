@@ -80,12 +80,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
 
   useEffect(() => { fetchAiTip(); }, []);
 
-  const copyInviteLink = () => {
+  const copyInviteLink = async () => {
     // Share just the clean URL with hash
     const shareUrl = `${window.location.origin}/#${encodeURIComponent(data.key)}`;
 
-    navigator.clipboard.writeText(shareUrl);
-    alert("Smart Link Copied! Send it to your team to collaborate in real-time.");
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Smart Link Copied! Send it to your team to collaborate in real-time.");
+    } catch {
+      prompt("Copy this link manually:", shareUrl);
+    }
   };
 
   return (
