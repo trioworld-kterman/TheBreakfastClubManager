@@ -56,7 +56,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
       const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
+        model: 'gemini-2.0-flash',
         contents: `Suggest a unique breakfast bread or pastry. Keep it to a short title and 1-sentence description.`,
         config: {
           responseMimeType: "application/json",
