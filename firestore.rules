@@ -7,7 +7,13 @@ service cloud.firestore {
     match /groups/{groupId} {
       allow get: if true;
       allow list: if false;
-      allow write: if true;
+      allow create: if request.resource.data.keys().hasAll(['key', 'name', 'employees'])
+                    && request.resource.data.key == groupId
+                    && request.resource.data.employees.size() <= 50;
+      allow update: if request.resource.data.keys().hasAll(['key', 'name', 'employees'])
+                    && request.resource.data.key == resource.data.key
+                    && request.resource.data.employees.size() <= 50;
+      allow delete: if false;
     }
   }
 }
