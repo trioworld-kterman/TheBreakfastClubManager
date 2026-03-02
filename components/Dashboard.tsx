@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { GroupData, Employee, BreadSuggestion } from '../types';
+import { GroupData, Employee } from '../types';
 import { getNextFridays, formatDate, generateId, getRandomColor } from '../utils/helpers';
-import { GoogleGenAI, Type } from "@google/genai";
 import { StorageService } from '../utils/StorageService';
 
 interface DashboardProps {
@@ -11,17 +10,8 @@ interface DashboardProps {
   onLogout: () => void;
 }
 
-const FALLBACK_TIPS = [
-  { title: "Warm Focaccia", description: "Top it with rosemary and sea salt for an aromatic office treat." },
-  { title: "Artisanal Sourdough", description: "Bring a variety of salted butters and honey for a gourmet feel." },
-  { title: "Cinnamon Swirl", description: "Perfect for mornings when the team needs a sweet, cozy boost." },
-  { title: "Brioche Buns", description: "Light, airy, and pairs perfectly with some fresh fruit preserves." }
-];
-
 export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }) => {
   const [newName, setNewName] = useState('');
-  const [aiSuggestion, setAiSuggestion] = useState<BreadSuggestion | null>(null);
-  const [loadingAi, setLoadingAi] = useState(false);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
   const [copied, setCopied] = useState(false);
@@ -55,44 +45,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
     setDraggedIdx(idx);
     setLocalEmployees(items);
   };
-
-  const fetchAiTip = async () => {
-    const isApiKeyValid = process.env.API_KEY && process.env.API_KEY !== 'undefined' && process.env.API_KEY.length > 10;
-
-    if (!isApiKeyValid) {
-      const randomTip = FALLBACK_TIPS[Math.floor(Math.random() * FALLBACK_TIPS.length)];
-      setAiSuggestion(randomTip);
-      return;
-    }
-
-    setLoadingAi(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: `Suggest a unique breakfast bread or pastry. Keep it to a short title and 1-sentence description.`,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              title: { type: Type.STRING },
-              description: { type: Type.STRING }
-            },
-            required: ['title', 'description']
-          }
-        }
-      });
-      if (!response.text) throw new Error('Empty response from AI');
-      setAiSuggestion(JSON.parse(response.text));
-    } catch (e) {
-      setAiSuggestion(FALLBACK_TIPS[0]);
-    } finally {
-      setLoadingAi(false);
-    }
-  };
-
-  useEffect(() => { fetchAiTip(); }, []);
 
   const copyInviteLink = async () => {
     const shareUrl = `${window.location.origin}/#${encodeURIComponent(data.key)}`;
@@ -181,21 +133,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
             </div>
           </section>
 
-          <section className="bg-amber-950 rounded-[2.5rem] p-10 text-white shadow-3xl relative overflow-hidden group">
-            <div className="relative z-10 space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="font-serif font-black text-3xl text-amber-400">Baker's Tip</h3>
-                <button onClick={fetchAiTip} disabled={loadingAi} className={`p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all ${loadingAi ? 'animate-spin' : ''}`}>✨</button>
-              </div>
-              {aiSuggestion ? (
-                <div className="space-y-4">
-                  <h4 className="text-xl font-black text-white">{aiSuggestion.title}</h4>
-                  <p className="text-amber-100/70 font-medium italic leading-relaxed">"{aiSuggestion.description}"</p>
-                </div>
-              ) : <div className="h-20 bg-white/5 rounded-2xl animate-pulse" />}
-            </div>
-            <div className="absolute -bottom-6 -right-6 text-9xl opacity-5 group-hover:scale-110 transition-transform duration-700">🥖</div>
-          </section>
         </div>
 
         <div className="lg:col-span-8">
