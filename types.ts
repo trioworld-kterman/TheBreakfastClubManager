@@ -16,7 +16,3 @@ export interface GroupData {
   lastRotatedAt?: Timestamp;
 }
 
-export interface BreadSuggestion {
-  title: string;
-  description: string;
-}
