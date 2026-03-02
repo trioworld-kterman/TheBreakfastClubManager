@@ -205,6 +205,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
             </div>
 
             <div className="divide-y divide-amber-50">
+              {/*
+               * Why employees[0] is always "this Friday's baker":
+               *
+               * checkAndRotate (FirebaseService) rotates the employees array by exactly
+               * as many positions as Fridays have passed since lastRotatedAt, then sets
+               * lastRotatedAt = getMostRecentPastFriday(). After that write, employees[0]
+               * is the person whose turn falls on the very next Friday after lastRotatedAt.
+               *
+               * getNextFridays() (helpers.ts) independently walks forward from new Date()
+               * until it lands on a Friday — so fridays[0] is also always the next upcoming
+               * Friday from the current wall clock.
+               *
+               * Both anchors converge on the same calendar Friday, so the mapping
+               * fridays[idx] → employees[idx % length] is always in sync with the
+               * Firestore rotation anchor; no further alignment is required.
+               */}
               {fridays.map((date, idx) => {
                 const employee = data.employees.length > 0 ? data.employees[idx % data.employees.length] : null;
                 const isToday = idx === 0;
