@@ -24,6 +24,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const [loadingAi, setLoadingAi] = useState(false);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
+  const [copied, setCopied] = useState(false);
   const fridays = getNextFridays(data.employees.length || 12);
 
   useEffect(() => {
@@ -93,12 +94,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   useEffect(() => { fetchAiTip(); }, []);
 
   const copyInviteLink = async () => {
-    // Share just the clean URL with hash
     const shareUrl = `${window.location.origin}/#${encodeURIComponent(data.key)}`;
-
     try {
       await navigator.clipboard.writeText(shareUrl);
-      alert("Smart Link Copied! Send it to your team to collaborate in real-time.");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     } catch {
       prompt("Copy this link manually:", shareUrl);
     }
@@ -238,6 +238,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
           </section>
         </div>
       </div>
+      {copied && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-sm px-4 py-2 rounded-full shadow-lg transition-opacity">
+          Smart Link copied! Share it with your team.
+        </div>
+      )}
     </div>
   );
 };
