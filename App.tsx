@@ -111,7 +111,6 @@ const App: React.FC = () => {
     setGroupData(null);
     localStorage.removeItem('bread_last_key');
     window.location.hash = '';
-    window.location.search = ''; // Clear any legacy query params
   };
 
   if (isLoading && !groupData) return (
