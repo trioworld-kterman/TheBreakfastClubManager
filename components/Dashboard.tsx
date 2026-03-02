@@ -23,7 +23,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const [aiSuggestion, setAiSuggestion] = useState<BreadSuggestion | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+  const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
   const fridays = getNextFridays(data.employees.length || 12);
+
+  useEffect(() => {
+    if (draggedIdx === null) {
+      setLocalEmployees(data.employees);
+    }
+  }, [data.employees, draggedIdx]);
 
   const addEmployee = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,11 +43,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const handleDragOver = (e: React.DragEvent, idx: number) => {
     e.preventDefault();
     if (draggedIdx === null || draggedIdx === idx) return;
-    const items = [...data.employees];
+    const items = [...localEmployees];
     const item = items.splice(draggedIdx, 1)[0];
     items.splice(idx, 0, item);
     setDraggedIdx(idx);
-    onUpdate(items);
+    setLocalEmployees(items);
   };
 
   const fetchAiTip = async () => {
@@ -143,13 +150,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                     <p className="text-amber-900/30 font-black italic text-sm">Add some bakers to start the loop.</p>
                   </div>
                 ) : (
-                  data.employees.map((emp, idx) => (
+                  localEmployees.map((emp, idx) => (
                     <div
                       key={emp.id}
                       draggable
-                      onDragStart={() => setDraggedIdx(idx)}
+                      onDragStart={() => { setLocalEmployees(data.employees); setDraggedIdx(idx); }}
                       onDragOver={e => handleDragOver(e, idx)}
-                      onDragEnd={() => setDraggedIdx(null)}
+                      onDragEnd={() => { setDraggedIdx(null); onUpdate(localEmployees); }}
                       className={`group flex items-center justify-between p-5 bg-white rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing ${draggedIdx === idx ? 'opacity-20 border-amber-900 border-dashed scale-95' : 'border-amber-50 hover:border-amber-950 shadow-sm hover:shadow-md'
                         }`}
                     >
