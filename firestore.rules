@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users must know the "Secret Key" (groupId) to access a board.
+    // Listing is disabled to prevent discovery of all active keys.
+    match /groups/{groupId} {
+      allow get: if true;
+      allow list: if false;
+      allow write: if true;
+    }
+  }
+}
