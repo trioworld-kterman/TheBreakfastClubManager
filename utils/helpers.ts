@@ -67,4 +67,4 @@ export const formatDate = (date: Date): string => {
   }).format(date);
 };
 
-export const generateId = () => Math.random().toString(36).substr(2, 9);
+export const generateId = () => crypto.randomUUID();
