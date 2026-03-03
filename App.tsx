@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GroupData, Employee } from './types';
 import { LoginView } from './components/LoginView';
 import { Dashboard } from './components/Dashboard';
-import { StorageService } from './utils/StorageService';
+import { StorageService, LAST_KEY_STORAGE_KEY } from './utils/StorageService';
 import { FirebaseService } from './utils/FirebaseService';
 
 const App: React.FC = () => {
@@ -109,9 +109,8 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setGroupKey(null);
     setGroupData(null);
-    localStorage.removeItem('bread_last_key');
+    localStorage.removeItem(LAST_KEY_STORAGE_KEY);
     window.location.hash = '';
-    window.location.search = ''; // Clear any legacy query params
   };
 
   if (isLoading && !groupData) return (

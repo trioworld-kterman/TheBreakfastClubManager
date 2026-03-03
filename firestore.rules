@@ -1,13 +1,24 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users must know the "Secret Key" (groupId) to access a board.
-    // Listing is disabled to prevent discovery of all active keys.
     match /groups/{groupId} {
       allow get: if true;
       allow list: if false;
-      allow write: if true;
+      allow create: if request.resource.data.keys().hasAll(['key', 'name', 'employees'])
+                    && request.resource.data.keys().hasOnly(['key', 'name', 'employees', 'createdAt', 'updatedAt', 'lastRotatedAt'])
+                    && request.resource.data.key == groupId
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.employees is list
+                    && request.resource.data.employees.size() <= 50;
+      allow update: if request.resource.data.keys().hasAll(['key', 'name', 'employees'])
+                    && request.resource.data.keys().hasOnly(['key', 'name', 'employees', 'createdAt', 'updatedAt', 'lastRotatedAt'])
+                    && request.resource.data.key == resource.data.key
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.employees is list
+                    && request.resource.data.employees.size() <= 50;
+      allow delete: if false;
     }
   }
 }

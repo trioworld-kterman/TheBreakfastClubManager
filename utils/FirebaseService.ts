@@ -118,9 +118,7 @@ export class FirebaseService {
     static async checkAndRotate(key: string, data: GroupData): Promise<boolean> {
         if (!data.lastRotatedAt || data.employees.length < 2) return false;
 
-        const lastRotated: Date = data.lastRotatedAt.toDate
-            ? data.lastRotatedAt.toDate()
-            : new Date(data.lastRotatedAt);
+        const lastRotated: Date = data.lastRotatedAt.toDate();
 
         const rotationsNeeded = countFridaysSince(lastRotated);
         if (rotationsNeeded === 0) return false;
@@ -129,7 +127,7 @@ export class FirebaseService {
         const rotated = [
             ...data.employees.slice(n),
             ...data.employees.slice(0, n),
-        ];
+        ].map((emp, idx) => ({ ...emp, order: idx }));
 
         const groupRef = doc(db, COLLECTION_GROUPS, key);
         await updateDoc(groupRef, {

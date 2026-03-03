@@ -1,6 +1,8 @@
 
 import { GroupData } from '../types';
 
+export const LAST_KEY_STORAGE_KEY = 'bread_last_key';
+
 export class StorageService {
   /**
    * Encodes the entire state into a Base64 string for URL sharing.
@@ -42,10 +44,10 @@ export class StorageService {
   }
 
   static setLastKey(key: string) {
-    localStorage.setItem('bread_last_key', key);
+    localStorage.setItem(LAST_KEY_STORAGE_KEY, key);
   }
 
   static getLastKey(): string | null {
-    return localStorage.getItem('bread_last_key');
+    return localStorage.getItem(LAST_KEY_STORAGE_KEY);
   }
 }
