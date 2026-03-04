@@ -73,3 +73,13 @@ export const formatDate = (date: Date): string => {
 };
 
 export const generateId = () => crypto.randomUUID();
+
+const ANON_ID_KEY = 'bread-board-anon-id';
+
+export const getAnonymousUserId = (): string => {
+  const existing = localStorage.getItem(ANON_ID_KEY);
+  if (existing) return existing;
+  const id = crypto.randomUUID();
+  localStorage.setItem(ANON_ID_KEY, id);
+  return id;
+};

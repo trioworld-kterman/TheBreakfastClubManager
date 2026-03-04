@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { getMostRecentPastFriday, countFridaysSince } from './helpers';
+import { getMostRecentPastFriday, countFridaysSince, getAnonymousUserId } from './helpers';
 
 describe('getMostRecentPastFriday', () => {
   afterEach(() => {
@@ -67,5 +67,35 @@ describe('countFridaysSince', () => {
     vi.setSystemTime(new Date(2026, 1, 28)); // last Friday = 2026-02-27
     const from = new Date(2026, 2, 6); // a future Friday
     expect(countFridaysSince(from)).toBe(0);
+  });
+});
+
+describe('getAnonymousUserId', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('generates and persists a UUID on first call', () => {
+    const store: Record<string, string> = {};
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => store[key] ?? null,
+      setItem: (key: string, val: string) => { store[key] = val; },
+    });
+
+    const id = getAnonymousUserId();
+    expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    expect(store['bread-board-anon-id']).toBe(id);
+  });
+
+  it('returns the same ID on subsequent calls', () => {
+    const store: Record<string, string> = {};
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => store[key] ?? null,
+      setItem: (key: string, val: string) => { store[key] = val; },
+    });
+
+    const id1 = getAnonymousUserId();
+    const id2 = getAnonymousUserId();
+    expect(id1).toBe(id2);
   });
 });
