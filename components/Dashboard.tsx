@@ -1,8 +1,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { GroupData, Employee } from '../types';
-import { getNextFridays, formatDate, generateId, getRandomColor } from '../utils/helpers';
+import { getNextFridays, formatDate, generateId, getRandomColor, getAnonymousUserId } from '../utils/helpers';
 import { StorageService } from '../utils/StorageService';
+import { IdeaWidget } from 'idea-widget';
+import 'idea-widget/style.css';
+import { IdeaService } from '../utils/IdeaService';
 
 interface DashboardProps {
   data: GroupData;
@@ -15,6 +18,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
   const [copied, setCopied] = useState(false);
+  const [anonId] = useState(() => getAnonymousUserId());
   const fridays = getNextFridays(data.employees.length || 12);
 
   useEffect(() => {
@@ -73,6 +77,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
           <p className="text-amber-900/60 font-medium text-lg">Your Friday rotation, preserved in the link below.</p>
         </div>
         <div className="flex items-center gap-4">
+          <div className="iw-header-wrapper">
+            <IdeaWidget
+              buttonLabel="Har du en idé?"
+              userId={anonId}
+              isAdmin={true}
+              onFetchIdeas={IdeaService.fetchIdeas as unknown as () => Promise<import('idea-widget').Idea[]>}
+              onSubmitIdea={(idea) => IdeaService.submitIdea(idea)}
+              onVote={(ideaId, voteType) => IdeaService.vote(ideaId, voteType, anonId)}
+              onFetchUserVotes={() => IdeaService.fetchUserVotes(anonId)}
+              onChangeStatus={IdeaService.changeStatus}
+              onDeleteIdea={IdeaService.deleteIdea}
+            />
+          </div>
           <button
             onClick={copyInviteLink}
             className="bg-amber-950 hover:bg-black text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-amber-950/20 active:scale-95 flex items-center gap-2"
