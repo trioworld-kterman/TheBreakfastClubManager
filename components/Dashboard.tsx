@@ -82,10 +82,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
               buttonLabel="Har du en idé?"
               userId={anonId}
               isAdmin={true}
-              onFetchIdeas={IdeaService.fetchIdeas as unknown as () => Promise<import('idea-widget').Idea[]>}
+              onFetchIdeas={() =>
+                IdeaService.fetchIdeas().then(ideas =>
+                  ideas.map(idea => ({ ...idea, createdAt: idea.createdAt.toDate() }))
+                )
+              }
               onSubmitIdea={(idea) => IdeaService.submitIdea(idea)}
-              onVote={(ideaId, voteType) => IdeaService.vote(ideaId, voteType, anonId)}
-              onFetchUserVotes={() => IdeaService.fetchUserVotes(anonId)}
+              onVote={(ideaId, voteType, userId) => IdeaService.vote(ideaId, voteType, userId)}
+              onFetchUserVotes={(userId) => IdeaService.fetchUserVotes(userId)}
               onChangeStatus={IdeaService.changeStatus}
               onDeleteIdea={IdeaService.deleteIdea}
             />
