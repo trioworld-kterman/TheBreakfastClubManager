@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "firebase": "^12.9.0",
+    "idea-widget": "github:trioworld-kterman/IdeaWidget",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
