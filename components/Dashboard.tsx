@@ -17,7 +17,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const [newName, setNewName] = useState('');
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
-  const [copied, setCopied] = useState(false);
   const [anonId] = useState(() => getAnonymousUserId());
   const fridays = getNextFridays(data.employees.length || 12);
 
@@ -50,16 +49,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
     setLocalEmployees(items);
   };
 
-  const copyInviteLink = async () => {
-    const shareUrl = `${window.location.origin}/#${encodeURIComponent(data.key)}`;
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      prompt("Copy this link manually:", shareUrl);
-    }
-  };
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 md:py-20">
@@ -77,30 +66,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
           <p className="text-amber-900/60 font-medium text-lg">Your Friday rotation, preserved in the link below.</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="iw-header-wrapper">
-            <IdeaWidget
-              buttonLabel="Har du en idé?"
-              userId={anonId}
-              isAdmin={true}
-              onFetchIdeas={() =>
-                IdeaService.fetchIdeas().then(ideas =>
-                  ideas.map(idea => ({ ...idea, createdAt: idea.createdAt.toDate() }))
-                )
-              }
-              onSubmitIdea={(idea) => IdeaService.submitIdea(idea)}
-              onVote={(ideaId, voteType, userId) => IdeaService.vote(ideaId, voteType, userId)}
-              onFetchUserVotes={(userId) => IdeaService.fetchUserVotes(userId)}
-              onChangeStatus={IdeaService.changeStatus}
-              onDeleteIdea={IdeaService.deleteIdea}
-            />
-          </div>
-          <button
-            onClick={copyInviteLink}
-            className="bg-amber-950 hover:bg-black text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-amber-950/20 active:scale-95 flex items-center gap-2"
-          >
-            <span>🔗</span> Share Smart Link
-          </button>
-          <button onClick={onLogout} className="text-amber-900 hover:text-red-700 font-black text-xs uppercase tracking-widest p-4">Logout</button>
+          <button onClick={onLogout} className="bg-white border-2 border-amber-950 text-amber-950 hover:bg-red-700 hover:border-red-700 hover:text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95">Logout</button>
         </div>
       </header>
 
@@ -197,11 +163,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
           </section>
         </div>
       </div>
-      {copied && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-sm px-4 py-2 rounded-full shadow-lg transition-opacity">
-          Smart Link copied! Share it with your team.
-        </div>
-      )}
+      <IdeaWidget
+        buttonLabel="Har du en idé?"
+        userId={anonId}
+        isAdmin={true}
+        onFetchIdeas={() =>
+          IdeaService.fetchIdeas().then(ideas =>
+            ideas.map(idea => ({ ...idea, createdAt: idea.createdAt.toDate() }))
+          )
+        }
+        onSubmitIdea={(idea) => IdeaService.submitIdea(idea)}
+        onVote={(ideaId, voteType, userId) => IdeaService.vote(ideaId, voteType, userId)}
+        onFetchUserVotes={(userId) => IdeaService.fetchUserVotes(userId)}
+        onChangeStatus={IdeaService.changeStatus}
+        onDeleteIdea={IdeaService.deleteIdea}
+      />
     </div>
   );
 };

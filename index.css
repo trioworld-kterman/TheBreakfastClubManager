@@ -14,24 +14,3 @@ body {
     @apply font-serif;
 }
 
-/* IdeaWidget: render button inline in the header (override its default position:fixed) */
-.iw-header-wrapper .iw-button {
-  position: static;
-  bottom: auto;
-  right: auto;
-  z-index: auto;
-  background-color: #431407; /* amber-950 */
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  font-weight: 900;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: white;
-  box-shadow: none;
-  transition: background-color 0.15s;
-}
-
-.iw-header-wrapper .iw-button:hover {
-  background-color: #000;
-}
