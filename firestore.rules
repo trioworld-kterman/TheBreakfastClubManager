@@ -30,6 +30,7 @@ service cloud.firestore {
                     && request.resource.data.votesDown == 0
                     && request.resource.data.status == 'open';
       allow update: if request.resource.data.keys().hasOnly(['title', 'description', 'votesUp', 'votesDown', 'status', 'createdAt'])
+                    && request.resource.data.keys().hasAll(['title', 'votesUp', 'votesDown', 'status'])
                     && request.resource.data.title is string
                     && request.resource.data.votesUp is int
                     && request.resource.data.votesDown is int;
