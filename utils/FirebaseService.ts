@@ -127,7 +127,11 @@ export class FirebaseService {
         const rotated = [
             ...data.employees.slice(n),
             ...data.employees.slice(0, n),
-        ].map((emp, idx) => ({ ...emp, order: idx }));
+        ].map((emp, idx) => ({
+            ...emp,
+            order: idx,
+            isAttendingBreakfast: false,
+        }));
 
         const groupRef = doc(db, COLLECTION_GROUPS, key);
         await updateDoc(groupRef, {

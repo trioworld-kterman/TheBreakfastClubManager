@@ -5,6 +5,7 @@ export interface Employee {
   name: string;
   color: string;
   order: number;
+  isAttendingBreakfast?: boolean;
 }
 
 export interface GroupData {
