@@ -17,7 +17,6 @@ const App: React.FC = () => {
     if (urlDataEncoded) {
       const sharedData = StorageService.decodeState(urlDataEncoded);
       if (sharedData) {
-        await FirebaseService.migrateFromLocalStorage(sharedData.key, sharedData);
         window.history.replaceState(null, '', `/#${encodeURIComponent(sharedData.key)}`);
         setGroupKey(sharedData.key);
         return;
@@ -28,19 +27,10 @@ const App: React.FC = () => {
     const activeKey = hash || StorageService.getLastKey();
 
     if (activeKey) {
-      const decodedKey = decodeURIComponent(activeKey);
-      setGroupKey(decodedKey);
-
-      const local = StorageService.loadLocal(decodedKey);
-      if (local) {
-        await FirebaseService.migrateFromLocalStorage(decodedKey, local);
-      } else {
-        const name = decodedKey.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        await FirebaseService.createGroup(decodedKey, `${name} Bread Board`);
-      }
+      setGroupKey(decodeURIComponent(activeKey));
+    } else {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -62,7 +52,22 @@ const App: React.FC = () => {
     setIsLoading(true);
     StorageService.setLastKey(groupKey);
 
+    let didEnsureGroup = false;
+
     const unsubscribe = FirebaseService.subscribeToGroup(groupKey, async data => {
+      if (!data && !didEnsureGroup) {
+        didEnsureGroup = true;
+        const local = StorageService.loadLocal(groupKey);
+        if (local) {
+          await FirebaseService.migrateFromLocalStorage(groupKey, local);
+        } else {
+          const name = groupKey.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          await FirebaseService.createGroup(groupKey, `${name} Bread Board`);
+        }
+        // Firestore will fire again once the group is created
+        return;
+      }
+
       setGroupData(data);
       setIsLoading(false);
 
