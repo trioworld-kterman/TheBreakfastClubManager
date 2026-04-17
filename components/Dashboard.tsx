@@ -75,31 +75,48 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10 md:py-20">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+    <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
         <div className="space-y-2">
           <div className="flex items-center gap-4 flex-wrap">
-            <h1 className="text-5xl md:text-7xl font-serif font-black text-amber-950 tracking-tight leading-none">
+            <h1
+              className="text-[40px] md:text-[56px] font-[600] leading-[1.07] text-[#1d1d1f]"
+              style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif', letterSpacing: '-0.28px' }}
+            >
               {data.name}
             </h1>
-            <div className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-sm border bg-emerald-50 text-emerald-800 border-emerald-200 flex items-center gap-2">
+            <div
+              className="px-3 py-1 rounded-[5px] text-[12px] font-[600] bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2"
+              style={{ letterSpacing: '-0.12px' }}
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               Synkroniseret i skyen
             </div>
           </div>
-          <p className="text-amber-900/60 font-medium text-lg">Jeres fredagsrotation gemmes automatisk i linket nedenfor.</p>
+          <p className="text-[rgba(0,0,0,0.48)] text-[17px] leading-[1.47]" style={{ letterSpacing: '-0.374px' }}>
+            Jeres fredagsrotation gemmes automatisk i linket nedenfor.
+          </p>
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={onLogout} className="bg-white border-2 border-amber-950 text-amber-950 hover:bg-red-700 hover:border-red-700 hover:text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95">Log ud</button>
+          <button
+            onClick={onLogout}
+            className="bg-amber-950 text-white hover:bg-red-700 px-6 py-3 rounded-[8px] text-[14px] font-[400] transition-all active:scale-95"
+            style={{ letterSpacing: '-0.224px' }}
+          >
+            Log ud
+          </button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-8">
-          <section className="bg-white rounded-[2.5rem] border border-amber-100 shadow-2xl shadow-amber-900/5 p-8 md:p-10 relative overflow-hidden">
+          <section className="bg-white rounded-[12px] shadow-[rgba(0,0,0,0.22)_3px_5px_30px_0px] p-8 relative overflow-hidden">
             <div className="relative z-10">
-              <h2 className="text-2xl font-black text-amber-950 mb-8 flex items-center gap-3">
-                <span className="text-3xl">🥯</span> Morgenmadsholdet
+              <h2
+                className="text-[28px] font-[600] leading-[1.10] text-[#1d1d1f] mb-8"
+                style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}
+              >
+                Morgenmadsholdet
               </h2>
 
               <form onSubmit={addEmployee} className="mb-10 group">
@@ -109,20 +126,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                     value={newName}
                     onChange={e => setNewName(e.target.value)}
                     placeholder="Tilføj kollega..."
-                    className="w-full pl-6 pr-20 py-5 rounded-2xl bg-amber-50/50 border-2 border-transparent focus:border-amber-900 focus:bg-white transition-all outline-none font-bold text-amber-950 placeholder-amber-900/30"
+                    className="w-full pl-6 pr-20 py-4 rounded-[11px] bg-white border-[3px] border-[rgba(0,0,0,0.04)] focus:border-amber-700 transition-all outline-none text-[17px] font-[400] text-[#1d1d1f] placeholder-[rgba(0,0,0,0.3)]"
+                    style={{ letterSpacing: '-0.374px' }}
                   />
-                  <button type="submit" className="absolute right-3 top-3 bottom-3 bg-amber-950 text-white px-5 rounded-xl font-black text-[10px] uppercase hover:bg-black active:scale-90 transition-all">Tilføj</button>
+                  <button type="submit" className="absolute right-3 top-3 bottom-3 bg-amber-950 text-white px-5 rounded-[8px] text-[14px] font-[600] hover:bg-black active:scale-90 transition-all">Tilføj</button>
                 </div>
               </form>
 
-              <p className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-amber-900/45">
+              <p className="mb-4 text-[14px] font-[600] leading-[1.29] text-[rgba(0,0,0,0.48)]" style={{ letterSpacing: '-0.224px' }}>
                 Marker om du kommer i listen
               </p>
 
               <div className="space-y-3">
                 {localEmployees.length === 0 ? (
-                  <div className="text-center py-10 border-2 border-dashed border-amber-100 rounded-3xl">
-                    <p className="text-amber-900/30 font-black italic text-sm">Tilføj nogle kolleger for at starte rotationen.</p>
+                  <div className="text-center py-10 border border-dashed border-[rgba(0,0,0,0.1)] rounded-[12px]">
+                    <p className="text-[rgba(0,0,0,0.3)] text-[14px] italic" style={{ letterSpacing: '-0.224px' }}>Tilføj nogle kolleger for at starte rotationen.</p>
                   </div>
                 ) : (
                   localEmployees.map((emp, idx) => {
@@ -138,15 +156,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                         }}
                         onDragOver={e => handleDragOver(e, idx)}
                         onDragEnd={handleDragEnd}
-                        className={`group flex items-center justify-between gap-4 p-5 bg-white rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing ${
+                        className={`group flex items-center justify-between gap-4 p-4 bg-white rounded-[8px] transition-all cursor-grab active:cursor-grabbing ${
                           draggedIdx === idx
-                            ? 'opacity-20 border-amber-900 border-dashed scale-95'
-                            : 'border-amber-50 hover:border-amber-950 shadow-sm hover:shadow-md'
+                            ? 'opacity-20 outline outline-2 outline-dashed outline-amber-700 scale-95'
+                            : 'shadow-none hover:shadow-[rgba(0,0,0,0.22)_3px_5px_30px_0px]'
                         }`}
                       >
                         <div className="flex items-center gap-4 min-w-0">
-                          <div className="text-amber-200 group-hover:text-amber-950 transition-colors">⠿</div>
-                          <span className="block font-black text-amber-950 text-lg truncate">{emp.name}</span>
+                          <div className="text-[rgba(0,0,0,0.2)] group-hover:text-[#1d1d1f] transition-colors">⠿</div>
+                          <span className="block text-[17px] font-[600] text-[#1d1d1f] truncate" style={{ letterSpacing: '-0.374px' }}>{emp.name}</span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
                           <button
@@ -158,7 +176,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                             className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all ${
                               isAttending
                                 ? 'border-emerald-600 bg-emerald-600 text-white shadow-md shadow-emerald-200'
-                                : 'border-amber-200 bg-white text-transparent hover:border-emerald-400 hover:bg-emerald-50'
+                                : 'border-[rgba(0,0,0,0.12)] bg-white text-transparent hover:border-emerald-400 hover:bg-emerald-50'
                             }`}
                             aria-pressed={isAttending}
                             aria-label={isAttending ? `${emp.name} kommer` : `${emp.name} kommer ikke`}
@@ -172,7 +190,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                               e.stopPropagation();
                               handleDeleteEmployee(emp);
                             }}
-                            className="text-amber-100 hover:text-red-600 font-bold p-1 transition-all"
+                            className="text-[rgba(0,0,0,0.2)] hover:text-red-600 font-bold p-1 transition-all"
                             aria-label={`Fjern ${emp.name}`}
                           >
                             ✕
@@ -184,54 +202,67 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                 )}
               </div>
               {data.employees.length > 1 && (
-                <p className="mt-8 text-[10px] text-amber-900/40 text-center font-black uppercase tracking-[0.3em]">Træk navnene for at bytte uger</p>
+                <p className="mt-8 text-[12px] text-[rgba(0,0,0,0.3)] text-center font-[400]" style={{ letterSpacing: '-0.12px' }}>Træk navnene for at bytte uger</p>
               )}
             </div>
           </section>
         </div>
 
         <div className="lg:col-span-8">
-          <section className="bg-white rounded-[3rem] border border-amber-100 shadow-2xl shadow-amber-900/5 overflow-hidden">
-            <div className="px-12 py-10 border-b-8 border-amber-50 bg-amber-50/30 flex items-center gap-5">
-              <span className="text-4xl">📅</span>
+          <section className="bg-white rounded-[12px] shadow-[rgba(0,0,0,0.22)_3px_5px_30px_0px] overflow-hidden">
+            <div className="px-8 py-7 border-b border-[rgba(0,0,0,0.06)] bg-white flex items-center gap-5">
               <div className="flex-1">
-                <h2 className="text-3xl font-black text-amber-950 tracking-tight">Morgenmadsplan</h2>
-                <p className="mt-2 text-xs font-black uppercase tracking-[0.24em] text-amber-900/50">
+                <h2
+                  className="text-[28px] font-[600] leading-[1.10] text-[#1d1d1f]"
+                  style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}
+                >
+                  Morgenmadsplan
+                </h2>
+                <p className="mt-1 text-[14px] font-[400] text-[rgba(0,0,0,0.48)]" style={{ letterSpacing: '-0.224px' }}>
                   {attendeesCount} {attendeesCount === 1 ? 'person kommer' : 'personer kommer'} til næste morgenmad
                 </p>
               </div>
             </div>
 
-            <div className="divide-y divide-amber-50">
+            <div className="divide-y divide-[rgba(0,0,0,0.06)]">
               {fridays.map((date, idx) => {
                 const employee = data.employees.length > 0 ? data.employees[idx % data.employees.length] : null;
                 const isToday = idx === 0;
 
                 return (
-                  <div key={date.toISOString()} className={`flex flex-col sm:flex-row sm:items-center justify-between p-10 transition-all gap-8 ${isToday ? 'bg-amber-50/60 border-l-[12px] border-l-amber-900' : ''}`}>
+                  <div key={date.toISOString()} className={`flex flex-col sm:flex-row sm:items-center justify-between p-8 transition-all gap-8 ${isToday ? 'bg-amber-50/30 border-l-4 border-l-amber-700' : ''}`}>
                     <div className="flex items-center gap-10">
                       <div className="text-center w-24">
-                        <span className="block text-[11px] font-black text-amber-950/40 uppercase tracking-[0.25em] mb-2">{date.toLocaleString('default', { month: 'short' })}</span>
-                        <span className="block text-6xl font-serif font-black text-amber-950 leading-none">{date.getDate()}</span>
+                        <span className="block text-[12px] font-[400] text-[rgba(0,0,0,0.48)] mb-2" style={{ letterSpacing: '-0.12px' }}>{date.toLocaleString('default', { month: 'short' })}</span>
+                        <span
+                          className="block text-[56px] font-[600] leading-[1.07] text-[#1d1d1f]"
+                          style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif', letterSpacing: '-0.28px' }}
+                        >{date.getDate()}</span>
                       </div>
-                      <div className="h-20 w-1 bg-amber-100 rounded-full hidden sm:block"></div>
+                      <div className="h-20 w-px bg-[rgba(0,0,0,0.08)] hidden sm:block"></div>
                       <div>
-                        <p className={`text-[11px] font-black uppercase tracking-[0.3em] mb-3 ${isToday ? 'text-amber-700' : 'text-amber-900/20'}`}>
-                          {isToday ? 'DENNE FREDAG' : 'KOMMENDE'}
+                        <p
+                          className={`text-[12px] font-[600] mb-3 ${isToday ? 'text-amber-700' : 'text-[rgba(0,0,0,0.2)]'}`}
+                          style={{ letterSpacing: '-0.12px' }}
+                        >
+                          {isToday ? 'Denne fredag' : 'Kommende'}
                         </p>
-                        <p className="text-2xl font-black text-amber-950 tracking-tight">{formatDate(date)}</p>
+                        <p
+                          className="text-[21px] font-[600] leading-[1.19] text-[#1d1d1f]"
+                          style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif', letterSpacing: '0.231px' }}
+                        >{formatDate(date)}</p>
                       </div>
                     </div>
                     <div className="flex flex-col items-start sm:items-end gap-3">
                       {employee ? (
-                        <div className={`px-10 py-5 rounded-[2rem] font-black shadow-lg border-2 border-black/5 text-2xl ${employee.color} transform hover:scale-105 transition-all cursor-default`}>
+                        <div className={`px-8 py-4 rounded-[12px] font-[600] text-[21px] shadow-[rgba(0,0,0,0.22)_3px_5px_30px_0px] ${employee.color} transition-all cursor-default`}>
                           {employee.name}
                         </div>
                       ) : (
-                        <div className="px-8 py-4 rounded-2xl bg-amber-50 text-amber-900/20 font-black text-xs uppercase tracking-widest border border-amber-100">Tom plads</div>
+                        <div className="px-6 py-3 rounded-[8px] bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.3)] text-[14px]" style={{ letterSpacing: '-0.224px' }}>Tom plads</div>
                       )}
                       {isToday && (
-                        <div className="px-5 py-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-black uppercase tracking-[0.18em]">
+                        <div className="px-4 py-2 rounded-[8px] bg-emerald-50 border border-emerald-200 text-emerald-900 text-[14px] font-[600]" style={{ letterSpacing: '-0.224px' }}>
                           Køb brød til {attendeesCount}
                         </div>
                       )}
