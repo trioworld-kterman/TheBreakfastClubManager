@@ -104,9 +104,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
               Synkroniseret i skyen
             </div>
           </div>
-          <p className="text-[rgba(0,0,0,0.48)] text-[17px] leading-[1.47]" style={{ letterSpacing: '-0.374px' }}>
-            Jeres fredagsrotation gemmes automatisk i linket nedenfor.
-          </p>
+
         </div>
         <div className="flex items-center gap-4">
           <button
