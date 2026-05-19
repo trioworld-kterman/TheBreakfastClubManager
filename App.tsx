@@ -10,9 +10,10 @@ const App: React.FC = () => {
   const [groupKey, setGroupKey] = useState<string | null>(null);
   const [groupData, setGroupData] = useState<GroupData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [lang, setLang] = useState<Language>(
-    () => (localStorage.getItem(LANG_STORAGE_KEY) as Language) ?? 'da'
-  );
+  const [lang, setLang] = useState<Language>(() => {
+    const stored = localStorage.getItem(LANG_STORAGE_KEY);
+    return stored === 'da' || stored === 'en' ? stored : 'da';
+  });
 
   const handleLangChange = (newLang: Language) => {
     setLang(newLang);

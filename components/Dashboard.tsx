@@ -292,7 +292,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, 
                   <div key={date.toISOString()} className={`flex flex-col sm:flex-row sm:items-center justify-between p-8 transition-all gap-8 ${isToday ? 'bg-amber-50/30 border-l-4 border-l-amber-700' : ''}`}>
                     <div className="flex items-center gap-10">
                       <div className="text-center w-24">
-                        <span className="block text-[12px] font-[400] text-[rgba(0,0,0,0.48)] mb-2" style={{ letterSpacing: '-0.12px' }}>{date.toLocaleString('default', { month: 'short' })}</span>
+                        <span className="block text-[12px] font-[400] text-[rgba(0,0,0,0.48)] mb-2" style={{ letterSpacing: '-0.12px' }}>{date.toLocaleString(lang === 'da' ? 'da-DK' : 'en-GB', { month: 'short' })}</span>
                         <span
                           className="block text-[56px] font-[600] leading-[1.07] text-[#1d1d1f]"
                           style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif', letterSpacing: '-0.28px' }}
