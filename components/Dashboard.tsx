@@ -77,6 +77,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
     );
   };
 
+  const setBreadRolls = (employeeId: string, rolls: 1 | 2) => {
+    onUpdate(
+      data.employees.map(employee =>
+        employee.id === employeeId ? { ...employee, breadRolls: rolls } : employee
+      )
+    );
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
@@ -170,6 +178,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                           <span className="block text-[17px] font-[600] text-[#1d1d1f] truncate" style={{ letterSpacing: '-0.374px' }}>{emp.name}</span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex items-center rounded-[8px] border-2 border-[rgba(0,0,0,0.10)] overflow-hidden text-[13px] font-[600]">
+                            <button
+                              type="button"
+                              onClick={e => { e.stopPropagation(); setBreadRolls(emp.id, 1); }}
+                              className={`px-3 py-2 transition-all ${
+                                (emp.breadRolls ?? 1) === 1
+                                  ? 'bg-emerald-600 text-white'
+                                  : 'bg-white text-[rgba(0,0,0,0.48)] hover:bg-emerald-50'
+                              }`}
+                              title="1 rundstykke"
+                            >
+                              1
+                            </button>
+                            <button
+                              type="button"
+                              onClick={e => { e.stopPropagation(); setBreadRolls(emp.id, 2); }}
+                              className={`px-3 py-2 transition-all ${
+                                emp.breadRolls === 2
+                                  ? 'bg-emerald-600 text-white'
+                                  : 'bg-white text-[rgba(0,0,0,0.48)] hover:bg-emerald-50'
+                              }`}
+                              title="2 rundstykker"
+                            >
+                              2
+                            </button>
+                          </div>
                           <button
                             type="button"
                             onClick={e => {
