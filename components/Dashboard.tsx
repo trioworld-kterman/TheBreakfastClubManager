@@ -4,14 +4,18 @@ import { getNextFridays, formatDate, generateId, getRandomColor, getAnonymousUse
 import { IdeaWidget } from 'idea-widget';
 import 'idea-widget/style.css';
 import { IdeaService } from '../utils/IdeaService';
+import { Language, getT } from '../utils/i18n';
 
 interface DashboardProps {
   data: GroupData;
   onUpdate: (employees: Employee[]) => void;
   onLogout: () => void;
+  lang: Language;
+  onLangChange: (lang: Language) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, lang, onLangChange }) => {
+  const t = getT(lang);
   const [newName, setNewName] = useState('');
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
@@ -61,7 +65,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   };
 
   const handleDeleteEmployee = (employee: Employee) => {
-    const confirmed = window.confirm(`Vil du fjerne ${employee.name} fra morgenmadsrotationen? Dette kan ikke fortrydes.`);
+    const confirmed = window.confirm(t.deleteConfirm(employee.name));
     if (!confirmed) return;
 
     onUpdate(data.employees.filter(e => e.id !== employee.id));
@@ -101,18 +105,36 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
               style={{ letterSpacing: '-0.12px' }}
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Synkroniseret i skyen
+              {t.syncBadge}
             </div>
           </div>
 
         </div>
         <div className="flex items-center gap-4">
+          <div className="flex items-center rounded-[8px] border-2 border-[rgba(0,0,0,0.10)] overflow-hidden text-[12px] font-[600]">
+            <button
+              type="button"
+              onClick={() => onLangChange('da')}
+              aria-pressed={lang === 'da'}
+              className={`px-3 py-1 transition-all ${lang === 'da' ? 'bg-amber-950 text-white' : 'bg-white text-[rgba(0,0,0,0.48)] hover:bg-amber-50'}`}
+            >
+              DA
+            </button>
+            <button
+              type="button"
+              onClick={() => onLangChange('en')}
+              aria-pressed={lang === 'en'}
+              className={`px-3 py-1 transition-all ${lang === 'en' ? 'bg-amber-950 text-white' : 'bg-white text-[rgba(0,0,0,0.48)] hover:bg-amber-50'}`}
+            >
+              EN
+            </button>
+          </div>
           <button
             onClick={onLogout}
             className="bg-amber-950 text-white hover:bg-red-700 px-6 py-3 rounded-[8px] text-[14px] font-[400] transition-all active:scale-95"
             style={{ letterSpacing: '-0.224px' }}
           >
-            Log ud
+            {t.logout}
           </button>
         </div>
       </header>
@@ -125,7 +147,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                 className="text-[28px] font-[600] leading-[1.10] text-[#1d1d1f] mb-8"
                 style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}
               >
-                Morgenmadsholdet
+                {t.teamHeader}
               </h2>
 
               <form onSubmit={addEmployee} className="mb-10 group">
@@ -134,22 +156,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                     type="text"
                     value={newName}
                     onChange={e => setNewName(e.target.value)}
-                    placeholder="Tilføj kollega..."
+                    placeholder={t.addPlaceholder}
                     className="w-full pl-6 pr-20 py-4 rounded-[11px] bg-white border-[3px] border-[rgba(0,0,0,0.04)] focus:border-amber-700 transition-all outline-none text-[17px] font-[400] text-[#1d1d1f] placeholder-[rgba(0,0,0,0.3)]"
                     style={{ letterSpacing: '-0.374px' }}
                   />
-                  <button type="submit" className="absolute right-3 top-3 bottom-3 bg-amber-950 text-white px-5 rounded-[8px] text-[14px] font-[600] hover:bg-black active:scale-90 transition-all">Tilføj</button>
+                  <button type="submit" className="absolute right-3 top-3 bottom-3 bg-amber-950 text-white px-5 rounded-[8px] text-[14px] font-[600] hover:bg-black active:scale-90 transition-all">{t.addButton}</button>
                 </div>
               </form>
 
               <p className="mb-4 text-[14px] font-[600] leading-[1.29] text-[rgba(0,0,0,0.48)]" style={{ letterSpacing: '-0.224px' }}>
-                Marker om du kommer i listen
+                {t.attendanceHint}
               </p>
 
               <div className="space-y-3">
                 {localEmployees.length === 0 ? (
                   <div className="text-center py-10 border border-dashed border-[rgba(0,0,0,0.1)] rounded-[12px]">
-                    <p className="text-[rgba(0,0,0,0.3)] text-[14px] italic" style={{ letterSpacing: '-0.224px' }}>Tilføj nogle kolleger for at starte rotationen.</p>
+                    <p className="text-[rgba(0,0,0,0.3)] text-[14px] italic" style={{ letterSpacing: '-0.224px' }}>{t.emptyTeam}</p>
                   </div>
                 ) : (
                   localEmployees.map((emp, idx) => {
@@ -181,7 +203,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                               type="button"
                               onClick={e => { e.stopPropagation(); setBreadRolls(emp.id, 1); }}
                               aria-pressed={(emp.breadRolls ?? 1) === 1}
-                              aria-label={`${emp.name}: 1 rundstykke`}
+                              aria-label={`${emp.name}: ${t.oneRoll}`}
                               className={`px-3 py-1 transition-all ${
                                 (emp.breadRolls ?? 1) === 1
                                   ? 'bg-emerald-600 text-white'
@@ -194,7 +216,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                               type="button"
                               onClick={e => { e.stopPropagation(); setBreadRolls(emp.id, 2); }}
                               aria-pressed={emp.breadRolls === 2}
-                              aria-label={`${emp.name}: 2 rundstykker`}
+                              aria-label={`${emp.name}: ${t.twoRolls}`}
                               className={`px-3 py-1 transition-all ${
                                 emp.breadRolls === 2
                                   ? 'bg-emerald-600 text-white'
@@ -216,8 +238,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                                 : 'border-[rgba(0,0,0,0.12)] bg-white text-transparent hover:border-emerald-400 hover:bg-emerald-50'
                             }`}
                             aria-pressed={isAttending}
-                            aria-label={isAttending ? `${emp.name} kommer` : `${emp.name} kommer ikke`}
-                            title={isAttending ? 'Kommer' : 'Kommer ikke'}
+                            aria-label={isAttending ? `${emp.name} ${t.comingLabel.toLowerCase()}` : `${emp.name} ${t.notComingLabel.toLowerCase()}`}
+                            title={isAttending ? t.comingLabel : t.notComingLabel}
                           >
                             <span className="text-base font-black">✓</span>
                           </button>
@@ -239,7 +261,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                 )}
               </div>
               {data.employees.length > 1 && (
-                <p className="mt-8 text-[12px] text-[rgba(0,0,0,0.3)] text-center font-[400]" style={{ letterSpacing: '-0.12px' }}>Træk navnene for at bytte uger</p>
+                <p className="mt-8 text-[12px] text-[rgba(0,0,0,0.3)] text-center font-[400]" style={{ letterSpacing: '-0.12px' }}>{t.dragHint}</p>
               )}
             </div>
           </section>
@@ -253,13 +275,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                   className="text-[28px] font-[600] leading-[1.10] text-[#1d1d1f]"
                   style={{ fontFamily: '"SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}
                 >
-                  Morgenmadsplan
+                  {t.planHeader}
                 </h2>
                 <p className="mt-1 text-[14px] font-[400] text-[rgba(0,0,0,0.48)]" style={{ letterSpacing: '-0.224px' }}>
-                  {attendeesCount === 0
-                    ? 'Ingen har tilmeldt sig endnu'
-                    : `${attendeesCount} ${attendeesCount === 1 ? 'person' : 'personer'} kommer · ${totalRolls} rundstykker`
-                  }
+                  {attendeesCount === 0 ? t.noAttendees : t.attendeeSummary(attendeesCount, totalRolls)}
                 </p>
               </div>
             </div>
@@ -285,7 +304,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                           className={`text-[12px] font-[600] mb-3 ${isToday ? 'text-amber-700' : 'text-[rgba(0,0,0,0.2)]'}`}
                           style={{ letterSpacing: '-0.12px' }}
                         >
-                          {isToday ? 'Denne fredag' : 'Kommende'}
+                          {isToday ? t.thisFriday : t.upcoming}
                         </p>
                         <p
                           className="text-[21px] font-[600] leading-[1.19] text-[#1d1d1f]"
@@ -299,11 +318,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                           {employee.name}
                         </div>
                       ) : (
-                        <div className="px-6 py-3 rounded-[8px] bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.3)] text-[14px]" style={{ letterSpacing: '-0.224px' }}>Tom plads</div>
+                        <div className="px-6 py-3 rounded-[8px] bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.3)] text-[14px]" style={{ letterSpacing: '-0.224px' }}>{t.emptySlot}</div>
                       )}
                       {isToday && (
                         <div className="px-4 py-2 rounded-[8px] bg-emerald-50 border border-emerald-200 text-emerald-900 text-[14px] font-[600]" style={{ letterSpacing: '-0.224px' }}>
-                          Køb {totalRolls} {totalRolls === 1 ? 'rundstykke' : 'rundstykker'}
+                          {t.buyRolls(totalRolls)}
                         </div>
                       )}
                     </div>
