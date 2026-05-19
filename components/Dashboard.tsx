@@ -17,7 +17,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
   const [anonId] = useState(() => getAnonymousUserId());
   const fridays = getNextFridays(data.employees.length || 12);
-  const attendeesCount = data.employees.filter(employee => employee.isAttendingBreakfast).length;
+  const attendeesCount = data.employees.filter(e => e.isAttendingBreakfast).length;
+  const totalRolls = data.employees
+    .filter(e => e.isAttendingBreakfast)
+    .reduce((sum, e) => sum + (e.breadRolls ?? 1), 0);
 
   useEffect(() => {
     if (draggedIdx === null) {
@@ -219,7 +222,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                   Morgenmadsplan
                 </h2>
                 <p className="mt-1 text-[14px] font-[400] text-[rgba(0,0,0,0.48)]" style={{ letterSpacing: '-0.224px' }}>
-                  {attendeesCount} {attendeesCount === 1 ? 'person kommer' : 'personer kommer'} til næste morgenmad
+                  {attendeesCount === 0
+                    ? 'Ingen har tilmeldt sig endnu'
+                    : `${attendeesCount} ${attendeesCount === 1 ? 'person' : 'personer'} kommer · ${totalRolls} rundstykker`
+                  }
                 </p>
               </div>
             </div>
@@ -263,7 +269,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                       )}
                       {isToday && (
                         <div className="px-4 py-2 rounded-[8px] bg-emerald-50 border border-emerald-200 text-emerald-900 text-[14px] font-[600]" style={{ letterSpacing: '-0.224px' }}>
-                          Køb brød til {attendeesCount}
+                          Køb {totalRolls} {totalRolls === 1 ? 'rundstykke' : 'rundstykker'}
                         </div>
                       )}
                     </div>
