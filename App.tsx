@@ -4,11 +4,20 @@ import { LoginView } from './components/LoginView';
 import { Dashboard } from './components/Dashboard';
 import { StorageService, LAST_KEY_STORAGE_KEY } from './utils/StorageService';
 import { FirebaseService } from './utils/FirebaseService';
+import { Language, LANG_STORAGE_KEY, getT } from './utils/i18n';
 
 const App: React.FC = () => {
   const [groupKey, setGroupKey] = useState<string | null>(null);
   const [groupData, setGroupData] = useState<GroupData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [lang, setLang] = useState<Language>(
+    () => (localStorage.getItem(LANG_STORAGE_KEY) as Language) ?? 'da'
+  );
+
+  const handleLangChange = (newLang: Language) => {
+    setLang(newLang);
+    localStorage.setItem(LANG_STORAGE_KEY, newLang);
+  };
 
   const init = useCallback(async () => {
     const params = new URLSearchParams(window.location.search);
@@ -105,13 +114,13 @@ const App: React.FC = () => {
       <div className="min-h-screen bg-[#fdfaf6] flex items-center justify-center">
         <div className="text-center">
           <div className="text-8xl animate-bounce mb-6">🥨</div>
-          <h2 className="text-2xl font-serif font-black text-amber-950">Henter frisk morgenbrød...</h2>
+          <h2 className="text-2xl font-serif font-black text-amber-950">{getT(lang).loading}</h2>
         </div>
       </div>
     );
   }
 
-  if (!groupKey) return <LoginView onLogin={handleLogin} />;
+  if (!groupKey) return <LoginView onLogin={handleLogin} lang={lang} onLangChange={handleLangChange} />;
 
   return (
     <div className="min-h-screen bg-[#fdfaf6]">
@@ -120,6 +129,8 @@ const App: React.FC = () => {
           data={groupData}
           onUpdate={updateEmployees}
           onLogout={handleLogout}
+          lang={lang}
+          onLangChange={handleLangChange}
         />
       )}
     </div>
