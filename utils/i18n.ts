@@ -32,6 +32,7 @@ interface Translations {
   attendeeSummary: (count: number, rolls: number) => string;
   buyRolls: (count: number) => string;
   deleteConfirm: (name: string) => string;
+  removeLabel: (name: string) => string;
   // Aria / titles
   oneRoll: string;
   twoRolls: string;
@@ -64,6 +65,7 @@ const da: Translations = {
     `${count} ${count === 1 ? 'person' : 'personer'} kommer · ${rolls} ${rolls === 1 ? 'rundstykke' : 'rundstykker'}`,
   buyRolls: (count) => `Køb ${count} ${count === 1 ? 'rundstykke' : 'rundstykker'}`,
   deleteConfirm: (name) => `Vil du fjerne ${name} fra morgenmadsrotationen? Dette kan ikke fortrydes.`,
+  removeLabel: (name) => `Fjern ${name}`,
   oneRoll: '1 rundstykke',
   twoRolls: '2 rundstykker',
   comingLabel: 'Kommer',
@@ -95,6 +97,7 @@ const en: Translations = {
     `${count} ${count === 1 ? 'person' : 'people'} coming · ${rolls} ${rolls === 1 ? 'roll' : 'rolls'}`,
   buyRolls: (count) => `Buy ${count} ${count === 1 ? 'roll' : 'rolls'}`,
   deleteConfirm: (name) => `Remove ${name} from the breakfast rotation? This cannot be undone.`,
+  removeLabel: (name) => `Remove ${name}`,
   oneRoll: '1 roll',
   twoRolls: '2 rolls',
   comingLabel: 'Coming',

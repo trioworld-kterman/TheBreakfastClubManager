@@ -250,7 +250,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, 
                               handleDeleteEmployee(emp);
                             }}
                             className="text-[rgba(0,0,0,0.2)] hover:text-red-600 font-bold p-1 transition-all"
-                            aria-label={`Fjern ${emp.name}`}
+                            aria-label={t.removeLabel(emp.name)}
                           >
                             ✕
                           </button>
