@@ -184,7 +184,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                               onClick={e => { e.stopPropagation(); setBreadRolls(emp.id, 1); }}
                               aria-pressed={(emp.breadRolls ?? 1) === 1}
                               aria-label={`${emp.name}: 1 rundstykke`}
-                              className={`px-3 py-2 transition-all ${
+                              className={`px-3 py-1 transition-all ${
                                 (emp.breadRolls ?? 1) === 1
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-white text-[rgba(0,0,0,0.48)] hover:bg-emerald-50'
@@ -197,7 +197,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout }
                               onClick={e => { e.stopPropagation(); setBreadRolls(emp.id, 2); }}
                               aria-pressed={emp.breadRolls === 2}
                               aria-label={`${emp.name}: 2 rundstykker`}
-                              className={`px-3 py-2 transition-all ${
+                              className={`px-3 py-1 transition-all ${
                                 emp.breadRolls === 2
                                   ? 'bg-emerald-600 text-white'
                                   : 'bg-white text-[rgba(0,0,0,0.48)] hover:bg-emerald-50'
