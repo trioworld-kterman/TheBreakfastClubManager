@@ -28,6 +28,8 @@ interface Translations {
   thisFriday: string;
   upcoming: string;
   emptySlot: string;
+  pantryLabel: string;
+  pantryPlaceholder: string;
   // Functions (interpolation)
   attendeeSummary: (count: number, rolls: number) => string;
   buyRolls: (count: number) => string;
@@ -61,6 +63,8 @@ const da: Translations = {
   thisFriday: 'Denne fredag',
   upcoming: 'Kommende',
   emptySlot: 'Tom plads',
+  pantryLabel: 'Mangler i madkassen',
+  pantryPlaceholder: 'F.eks. stærk ost, marmelade, smør...',
   attendeeSummary: (count, rolls) =>
     `${count} ${count === 1 ? 'person' : 'personer'} kommer · ${rolls} ${rolls === 1 ? 'rundstykke' : 'rundstykker'}`,
   buyRolls: (count) => `Køb ${count} ${count === 1 ? 'rundstykke' : 'rundstykker'}`,
@@ -93,6 +97,8 @@ const en: Translations = {
   thisFriday: 'This Friday',
   upcoming: 'Upcoming',
   emptySlot: 'Empty slot',
+  pantryLabel: 'Missing from the food box',
+  pantryPlaceholder: 'E.g. strong cheese, jam, butter...',
   attendeeSummary: (count, rolls) =>
     `${count} ${count === 1 ? 'person' : 'people'} coming · ${rolls} ${rolls === 1 ? 'roll' : 'rolls'}`,
   buyRolls: (count) => `Buy ${count} ${count === 1 ? 'roll' : 'rolls'}`,

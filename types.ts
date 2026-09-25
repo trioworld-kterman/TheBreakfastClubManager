@@ -16,5 +16,6 @@ export interface GroupData {
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
   lastRotatedAt?: Timestamp;
+  pantryNote?: string;
 }
 

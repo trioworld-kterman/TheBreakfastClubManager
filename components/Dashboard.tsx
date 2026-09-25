@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GroupData, Employee } from '../types';
 import { getNextFridays, formatDate, generateId, getRandomColor, getAnonymousUserId } from '../utils/helpers';
 import { IdeaWidget } from 'idea-widget';
@@ -9,17 +9,20 @@ import { Language, getT } from '../utils/i18n';
 interface DashboardProps {
   data: GroupData;
   onUpdate: (employees: Employee[]) => void;
+  onPantryNoteChange: (note: string) => void;
   onLogout: () => void;
   lang: Language;
   onLangChange: (lang: Language) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, lang, onLangChange }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onPantryNoteChange, onLogout, lang, onLangChange }) => {
   const t = getT(lang);
   const [newName, setNewName] = useState('');
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>(data.employees);
   const [anonId] = useState(() => getAnonymousUserId());
+  const [pantryNote, setPantryNote] = useState(data.pantryNote ?? '');
+  const [isEditingPantry, setIsEditingPantry] = useState(false);
   const fridays = getNextFridays(data.employees.length || 12);
   const attendeesCount = data.employees.filter(e => e.isAttendingBreakfast).length;
   const totalRolls = data.employees
@@ -31,6 +34,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, 
       setLocalEmployees(data.employees);
     }
   }, [data.employees, draggedIdx]);
+
+  useEffect(() => {
+    if (!isEditingPantry) {
+      setPantryNote(data.pantryNote ?? '');
+    }
+  }, [data.pantryNote, isEditingPantry]);
+
+  const savePantryNote = () => {
+    setIsEditingPantry(false);
+    const trimmed = pantryNote.trim();
+    if (trimmed !== (data.pantryNote ?? '')) {
+      onPantryNoteChange(trimmed);
+    }
+  };
 
   const addEmployee = (e: React.FormEvent) => {
     e.preventDefault();
@@ -289,7 +306,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, 
                 const isToday = idx === 0;
 
                 return (
-                  <div key={date.toISOString()} className={`flex flex-col sm:flex-row sm:items-center justify-between p-8 transition-all gap-8 ${isToday ? 'bg-amber-50/30 border-l-4 border-l-amber-700' : ''}`}>
+                  <React.Fragment key={date.toDateString()}>
+                  <div className={`flex flex-col sm:flex-row sm:items-center justify-between p-8 transition-all gap-8 ${isToday ? 'bg-amber-50/30 border-l-4 border-l-amber-700' : ''}`}>
                     <div className="flex items-center gap-10">
                       <div className="text-center w-24">
                         <span className="block text-[12px] font-[400] text-[rgba(0,0,0,0.48)] mb-2" style={{ letterSpacing: '-0.12px' }}>{date.toLocaleString(lang === 'da' ? 'da-DK' : 'en-GB', { month: 'short' })}</span>
@@ -327,6 +345,30 @@ export const Dashboard: React.FC<DashboardProps> = ({ data, onUpdate, onLogout, 
                       )}
                     </div>
                   </div>
+                  {isToday && (
+                    <div className="px-8 py-6 bg-[rgba(0,0,0,0.02)]">
+                      <label
+                        htmlFor="pantry-note"
+                        className="block text-[12px] font-[600] text-[rgba(0,0,0,0.48)] mb-2"
+                        style={{ letterSpacing: '-0.12px' }}
+                      >
+                        🧺 {t.pantryLabel}
+                      </label>
+                      <textarea
+                        id="pantry-note"
+                        value={pantryNote}
+                        onChange={e => setPantryNote(e.target.value)}
+                        onFocus={() => setIsEditingPantry(true)}
+                        onBlur={savePantryNote}
+                        placeholder={t.pantryPlaceholder}
+                        maxLength={500}
+                        rows={2}
+                        className="w-full px-4 py-3 rounded-[11px] bg-white border-[3px] border-[rgba(0,0,0,0.04)] focus:border-amber-700 transition-all outline-none text-[15px] font-[400] text-[#1d1d1f] placeholder-[rgba(0,0,0,0.3)] resize-y"
+                        style={{ letterSpacing: '-0.224px' }}
+                      />
+                    </div>
+                  )}
+                  </React.Fragment>
                 );
               })}
             </div>

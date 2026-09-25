@@ -5,19 +5,22 @@ service cloud.firestore {
       allow get: if true;
       allow list: if false;
       allow create: if request.resource.data.keys().hasAll(['key', 'name', 'employees'])
-                    && request.resource.data.keys().hasOnly(['key', 'name', 'employees', 'createdAt', 'updatedAt', 'lastRotatedAt'])
+                    && request.resource.data.keys().hasOnly(['key', 'name', 'employees', 'createdAt', 'updatedAt', 'lastRotatedAt', 'pantryNote'])
                     && request.resource.data.key == groupId
                     && request.resource.data.name is string
                     && request.resource.data.name.size() > 0
                     && request.resource.data.employees is list
                     && request.resource.data.employees.size() <= 50;
       allow update: if request.resource.data.keys().hasAll(['key', 'name', 'employees'])
-                    && request.resource.data.keys().hasOnly(['key', 'name', 'employees', 'createdAt', 'updatedAt', 'lastRotatedAt'])
+                    && request.resource.data.keys().hasOnly(['key', 'name', 'employees', 'createdAt', 'updatedAt', 'lastRotatedAt', 'pantryNote'])
                     && request.resource.data.key == resource.data.key
                     && request.resource.data.name is string
                     && request.resource.data.name.size() > 0
                     && request.resource.data.employees is list
-                    && request.resource.data.employees.size() <= 50;
+                    && request.resource.data.employees.size() <= 50
+                    && (!('pantryNote' in request.resource.data)
+                        || (request.resource.data.pantryNote is string
+                            && request.resource.data.pantryNote.size() <= 500));
       allow delete: if false;
     }
 

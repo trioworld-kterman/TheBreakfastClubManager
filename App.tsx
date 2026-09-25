@@ -98,6 +98,11 @@ const App: React.FC = () => {
     await FirebaseService.updateEmployees(groupKey, newEmployees);
   };
 
+  const updatePantryNote = async (note: string) => {
+    if (!groupKey) return;
+    await FirebaseService.updatePantryNote(groupKey, note);
+  };
+
   const handleLogin = (key: string) => {
     const sanitized = key.trim().toLowerCase().replace(/\s+/g, '-');
     window.location.hash = encodeURIComponent(sanitized);
@@ -129,6 +134,7 @@ const App: React.FC = () => {
         <Dashboard
           data={groupData}
           onUpdate={updateEmployees}
+          onPantryNoteChange={updatePantryNote}
           onLogout={handleLogout}
           lang={lang}
           onLangChange={handleLangChange}

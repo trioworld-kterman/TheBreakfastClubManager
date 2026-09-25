@@ -75,6 +75,17 @@ export class FirebaseService {
     }
 
     /**
+     * Updates the free-text note about what is missing in the food box
+     */
+    static async updatePantryNote(key: string, note: string): Promise<void> {
+        const groupRef = doc(db, COLLECTION_GROUPS, key);
+        await updateDoc(groupRef, {
+            pantryNote: note,
+            updatedAt: serverTimestamp()
+        });
+    }
+
+    /**
      * Migrates local storage data to Firebase
      */
     static async migrateFromLocalStorage(key: string, localData: GroupData): Promise<void> {
